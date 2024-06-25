@@ -32,6 +32,7 @@ namespace Trees.Views
             };
 
             await _databaseService.AddSprzedazAsync(sprzedaz);
+
             await Navigation.PushAsync(new SukcesPage());
         }
     }
