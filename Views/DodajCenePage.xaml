@@ -1,0 +1,12 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Trees.Views.DodajCenePage">
+
+    <StackLayout>
+        <Label Text="Cena:" />
+        <Entry x:Name="CenaEntry" Keyboard="Numeric" />
+        <Label Text="Ilość:" />
+        <Entry x:Name="IloscEntry" Keyboard="Numeric" />
+        <Button Text="Dodaj Sprzedaż" Clicked="OnDodajSprzedazClicked" />
+    </StackLayout>
+</ContentPage>

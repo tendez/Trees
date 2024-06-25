@@ -1,0 +1,11 @@
+﻿<!-- MainPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Trees.MainPage">
+    <StackLayout>
+        <Label Text="Nazwa Twojego Stoiska" FontSize="24" HorizontalOptions="Center" VerticalOptions="End"/>
+        <Button Text="Dodaj sprzedaż" Clicked="OnDodajSprzedazClicked"/>
+        <Button Text="Zobacz sprzedaż" Clicked="OnZobaczSprzedazClicked"/>
+        <Button Text="Wyloguj się" Clicked="OnLogoutButtonClicked"/>
+    </StackLayout>
+</ContentPage>
