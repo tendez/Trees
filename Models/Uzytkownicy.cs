@@ -2,8 +2,9 @@
 {
     public class Uzytkownicy
     {
-        public int UsersID { get; set; }
+        public int UserID { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string Role { get; set; } 
     }
 }

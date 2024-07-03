@@ -3,6 +3,6 @@
     public class Wielkosc
     {
         public int WielkoscID { get; set; }
-        public string OpisWielkosc { get; set; }
+        public string OpisWielkosci { get; set; }
     }
 }

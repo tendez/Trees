@@ -1,11 +1,14 @@
 using Microsoft.Maui.Controls;
+using Trees.Models;
 
 namespace Trees.Views
 {
     public partial class SukcesPage : ContentPage
     {
-        public SukcesPage()
+        private readonly Stoisko _stoisko;
+        public SukcesPage(Stoisko stoisko)
         {
+            _stoisko = stoisko;
             InitializeComponent();
         }
 
@@ -16,7 +19,7 @@ namespace Trees.Views
 
         private async void OnZobaczSprzedazClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new ZobaczSprzedazPage());
+            await Navigation.PushAsync(new ZobaczSprzedazPage(_stoisko));
         }
     }
 }

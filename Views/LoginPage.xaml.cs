@@ -1,14 +1,15 @@
-// Views/LoginPage.xaml.cs
 using Microsoft.Maui.Controls;
-
-using System;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Threading.Tasks;
+using Trees.Models;
 
 namespace Trees.Views
 {
     public partial class LoginPage : ContentPage
     {
+        private readonly string _connectionString = "Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        private int _loggedInUser;
         public LoginPage()
         {
             InitializeComponent();
@@ -19,40 +20,62 @@ namespace Trees.Views
             string username = UsernameEntry.Text;
             string password = PasswordEntry.Text;
 
-            if (await ValidateUser(username, password))
+            if (await ValidateUserAsync(username, password))
             {
-                // Ustawienie stanu zalogowania
+                
                 Preferences.Set("IsLoggedIn", true);
 
-                // Pomyœlne logowanie, przekierowanie do strony g³ównej
+              
                 await Navigation.PushAsync(new MainPage());
             }
             else
             {
-                // B³êdne dane logowania
                 LoginStatusLabel.Text = "Nieprawid³owa nazwa u¿ytkownika lub has³o.";
             }
         }
 
-        private async Task<bool> ValidateUser(string username, string password)
+        private async Task<bool> ValidateUserAsync(string username, string password)
         {
             bool isValid = false;
             string hashedPassword = HashPassword(password);
 
-            using (SqlConnection connection = new SqlConnection("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT COUNT(1) FROM Uzytkownicy WHERE Login=@username AND Password=@password";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", hashedPassword);
-                connection.Open();
 
-                int count = (int)await command.ExecuteScalarAsync();
-                isValid = count > 0;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    int count = (int)await command.ExecuteScalarAsync();
+                    isValid = count > 0;
+
+                    if (isValid)
+                    {
+                       
+                        string query2 = "SELECT UserID FROM Uzytkownicy WHERE Login=@username";
+                        SqlCommand command2 = new SqlCommand(query2, connection);
+                        command2.Parameters.AddWithValue("@username", username);
+
+                        
+                        
+                        _loggedInUser = (int)await command2.ExecuteScalarAsync();
+                        Preferences.Set("UserID", _loggedInUser);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"B³¹d podczas walidacji u¿ytkownika: {ex.Message}");
+                   
+                }
             }
 
             return isValid;
         }
+
 
         private string HashPassword(string password)
         {

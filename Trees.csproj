@@ -85,6 +85,9 @@
 	  <MauiXaml Update="Views\SukcesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\WyborStoiskaPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\WyborWielkosciPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

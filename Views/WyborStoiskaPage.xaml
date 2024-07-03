@@ -1,15 +1,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Trees.Views.WyborWielkosciPage">
+             x:Class="Trees.Views.WyborStoiskaPage">
 
     <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-        <CollectionView x:Name="WielkoscCollectionView"
+        <CollectionView x:Name="StoiskaCollectionView"
                         SelectionMode="Single"  
-                        SelectionChanged="OnWielkoscSelected">
+                        SelectionChanged="OnStoiskoSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="10">
-                        <Label Text="{Binding OpisWielkosci}"
+                        <Label Text="{Binding StoiskoNazwa}"
                                FontSize="16"
                                VerticalOptions="Center"
                                HorizontalOptions="StartAndExpand" />
@@ -18,11 +18,6 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Button Text="Dalej"
-                x:Name="DalejButton"
-                IsEnabled="False"
-                Clicked="OnDalejClicked"
-                VerticalOptions="End"
-                HorizontalOptions="FillAndExpand" />
+        
     </StackLayout>
 </ContentPage>

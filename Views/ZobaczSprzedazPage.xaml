@@ -7,12 +7,14 @@
             <DataTemplate>
                 <Frame>
                     <StackLayout>
-                        <Label Text="{Binding NazwaGatunku}" />
-                        <Label Text="{Binding WielkoscID}" />
-                        <Label Text="{Binding Cena}" />
-                        <Label Text="{Binding Ilosc}" />
-                        <Label Text="{Binding CalkowitaCena}" />
-                        <Label Text="{Binding DataSprzedazy}" />
+                        <Label Text="{Binding NazwaGatunku, StringFormat='Nazwa Gatunku: {0}'}" />
+                        <Label Text="{Binding OpisWielkosci, StringFormat='Opis Wielkosci: {0}'}" />
+                        <Label Text="{Binding Cena, StringFormat='Cena: {0}pln'}" />
+                        <Label Text="{Binding Ilosc, StringFormat='Ilosc: {0}'}" />
+                        <Label Text="{Binding CalkowitaCena, StringFormat='Calkowita Cena: {0}pln'}" />
+                        <Label Text="{Binding DataSprzedazy, StringFormat='Data Sprzedazy: {0}'}" />
+                        <Label Text="{Binding Login, StringFormat='Login: {0}'}" />
+                        <Label Text="{Binding StoiskoNazwa, StringFormat='Nazwa stoiska: {0}'}" />
                     </StackLayout>
                 </Frame>
             </DataTemplate>
