@@ -4,15 +4,24 @@ using System;
 using System.Threading.Tasks;
 using Trees.Models;
 
+
 namespace Trees.Views
 {
     public partial class LoginPage : ContentPage
     {
         private readonly string _connectionString = "Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
         private int _loggedInUser;
+
         public LoginPage()
         {
             InitializeComponent();
+
+            // Sprawdzanie, czy u¿ytkownik jest ju¿ zalogowany
+            if (Preferences.ContainsKey("IsLoggedIn") && Preferences.Get("IsLoggedIn", false))
+            {
+                // Przekierowanie do strony g³ównej, jeœli u¿ytkownik jest zalogowany
+                Navigation.PushAsync(new MainPage());
+            }
         }
 
         private async void OnLoginButtonClicked(object sender, EventArgs e)
@@ -22,10 +31,7 @@ namespace Trees.Views
 
             if (await ValidateUserAsync(username, password))
             {
-                
                 Preferences.Set("IsLoggedIn", true);
-
-              
                 await Navigation.PushAsync(new MainPage());
             }
             else
@@ -55,13 +61,10 @@ namespace Trees.Views
 
                     if (isValid)
                     {
-                       
                         string query2 = "SELECT UserID FROM Uzytkownicy WHERE Login=@username";
                         SqlCommand command2 = new SqlCommand(query2, connection);
                         command2.Parameters.AddWithValue("@username", username);
 
-                        
-                        
                         _loggedInUser = (int)await command2.ExecuteScalarAsync();
                         Preferences.Set("UserID", _loggedInUser);
                     }
@@ -69,13 +72,11 @@ namespace Trees.Views
                 catch (Exception ex)
                 {
                     Console.WriteLine($"B³¹d podczas walidacji u¿ytkownika: {ex.Message}");
-                   
                 }
             }
 
             return isValid;
         }
-
 
         private string HashPassword(string password)
         {
@@ -89,6 +90,21 @@ namespace Trees.Views
                 }
                 return builder.ToString();
             }
+        }
+
+        // Funkcja do pokazywania/ukrywania has³a
+        private void OnShowPasswordCheckBoxChanged(object sender, CheckedChangedEventArgs e)
+        {
+            PasswordEntry.IsPassword = !e.Value; // Jeœli checkbox zaznaczony, has³o nie jest ukryte
+        }
+
+        // Funkcja wylogowania
+        public async Task LogoutAsync()
+        {
+            Preferences.Remove("IsLoggedIn");
+            Preferences.Remove("UserID");
+
+            await Navigation.PushAsync(new LoginPage());
         }
     }
 }

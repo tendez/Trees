@@ -3,9 +3,9 @@
              x:Class="Trees.MainPage">
     <StackLayout>
         <Label Text="Nazwa Twojego Stoiska" FontSize="24" HorizontalOptions="Center"  IsVisible="false" VerticalOptions="End" x:Name="NazwaStoiskaLabel"/>
-        <Button Text="Wybierz stoisko" Clicked="OnWybierzStoiskoClicked" IsVisible="false" x:Name="WybierzStoiskoButton"/>
-        <Button Text="Dodaj sprzedaż" Clicked="OnDodajSprzedazClicked" IsVisible="False" x:Name="DodajSprzedazButton"/>
-        <Button Text="Zobacz sprzedaż" Clicked="OnZobaczSprzedazClicked" IsVisible="False" x:Name="ZobaczSprzedazButton"/>
+        <Button Text="Wybierz stoisko" Clicked="OnWybierzStoiskoClicked" IsVisible="true" x:Name="WybierzStoiskoButton"/>
+        <Button Text="Dodaj sprzedaż" Clicked="OnDodajSprzedazClicked" IsVisible="true" x:Name="DodajSprzedazButton"/>
+        <Button Text="Zobacz sprzedaż" Clicked="OnZobaczSprzedazClicked" IsVisible="true" x:Name="ZobaczSprzedazButton"/>
         <Button Text="Wyloguj się" Clicked="OnLogoutButtonClicked" IsVisible="true" x:Name="LogoutButton"/>
        
 

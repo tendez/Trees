@@ -1,12 +1,27 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Trees.Views.LoginPage">
-    <StackLayout Padding="30">
-        <Label Text="Logowanie" FontSize="36" HorizontalOptions="Center"/>
-        <Entry Placeholder="Nazwa użytkownika" x:Name="UsernameEntry"/>
-        <Entry Placeholder="Hasło" x:Name="PasswordEntry" IsPassword="True"/>
-        <Button Text="Zaloguj się" Clicked="OnLoginButtonClicked"/>
-        <Label x:Name="LoginStatusLabel" TextColor="Red" HorizontalOptions="Center"/>
+             x:Class="Trees.Views.LoginPage"
+             Title="Logowanie">
+
+    <StackLayout Padding="10">
+        <Label Text="Nazwa użytkownika" />
+        <Entry x:Name="UsernameEntry" Placeholder="Wprowadź nazwę użytkownika" />
+
+        <Label Text="Hasło" />
+        <!-- Pole hasła z opcją jego ukrycia/pokazania -->
+        <Entry x:Name="PasswordEntry" IsPassword="True" Placeholder="Wprowadź hasło" />
+
+        <!-- Checkbox do pokazania/ukrycia hasła -->
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+            <CheckBox x:Name="ShowPasswordCheckBox" IsChecked="False" CheckedChanged="OnShowPasswordCheckBoxChanged"/>
+            <Label Text="Pokaż hasło" VerticalOptions="Center"/>
+        </StackLayout>
+
+        <Label x:Name="LoginStatusLabel" Text="" TextColor="Red" />
+
+        <!-- Przycisk logowania -->
+        <Button Text="Zaloguj się" Clicked="OnLoginButtonClicked" />
+
     </StackLayout>
+
 </ContentPage>

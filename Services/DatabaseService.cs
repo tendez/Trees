@@ -17,7 +17,13 @@ namespace Trees.Services
         {
             _connectionString = connectionString;
         }
-
+        public async Task<Stoisko> GetStoiskoByIdAsync(int stoiskoId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = "SELECT * FROM Stoisko WHERE StoiskoID = @StoiskoID";
+            return await connection.QueryFirstOrDefaultAsync<Stoisko>(sql, new { StoiskoID = stoiskoId });
+        }
+        
         public async Task<IEnumerable<Gatunek>> GetGatunkiAsync()
         {
             using var connection = new SqlConnection(_connectionString);
