@@ -23,9 +23,8 @@ namespace Trees.Views
 
         private async void OnDodajSprzedazClicked(object sender, EventArgs e)
         {
-            warning.IsVisible = false; 
+            warning.IsVisible = false;
 
-           
             if (!decimal.TryParse(CenaEntry.Text, out decimal cena))
             {
                 warning.Text = "WprowadŸ poprawn¹ liczbê w polu Cena.";
@@ -40,7 +39,6 @@ namespace Trees.Views
                 return;
             }
 
-           
             if (cena <= 0)
             {
                 warning.Text = "Cena musi byæ wiêksza ni¿ 0.";
@@ -55,7 +53,20 @@ namespace Trees.Views
                 return;
             }
 
-          
+            // Sprawdzenie dostêpnoœci w magazynie
+            var magazyn = await _databaseService.GetMagazynAsync(_selectedGatunek.GatunekID, _selectedWielkosc.WielkoscID, _stoisko.StoiskoID);
+            if (magazyn == null || magazyn.Ilosc < ilosc)
+            {
+                warning.Text = "Nie ma wystarczaj¹cej iloœci towaru w magazynie.";
+                warning.IsVisible = true;
+                return;
+            }
+
+            // Aktualizacja iloœci w magazynie
+            magazyn.Ilosc -= ilosc;
+            await _databaseService.UpdateMagazynAsync(magazyn);
+
+            // Dodanie sprzeda¿y
             var sprzedaz = new Sprzedaz
             {
                 UserID = Preferences.Get("UserID", 0),
@@ -68,10 +79,10 @@ namespace Trees.Views
                 StoiskoID = _stoisko.StoiskoID
             };
 
-          
             await _databaseService.AddSprzedazAsync(sprzedaz);
 
             await Navigation.PushAsync(new SukcesPage(_stoisko));
         }
+
     }
 }

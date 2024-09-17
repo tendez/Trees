@@ -94,7 +94,20 @@ namespace Trees.Services
             await connection.ExecuteAsync(sql, sprzedaz);
         }
 
-    
+        public async Task<Magazyn> GetMagazynAsync(int gatunekId, int wielkoscId, int stoiskoId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT * FROM Magazyn WHERE GatunekID = @GatunekID AND WielkoscID = @WielkoscID AND StoiskoID = @StoiskoID";
+            return await connection.QueryFirstOrDefaultAsync<Magazyn>(sql, new { GatunekID = gatunekId, WielkoscID = wielkoscId, StoiskoID = stoiskoId });
+        }
+
+        public async Task UpdateMagazynAsync(Magazyn magazyn)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"UPDATE Magazyn SET Ilosc = @Ilosc WHERE MagazynID = @MagazynID";
+            await connection.ExecuteAsync(sql, new { Ilosc = magazyn.Ilosc, MagazynID = magazyn.MagazynID });
+        }
+
 
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAsync(Stoisko stoisko)
         {
