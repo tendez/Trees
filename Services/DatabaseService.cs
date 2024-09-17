@@ -60,30 +60,8 @@ namespace Trees.Services
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<Magazyn>("SELECT * FROM Magazyn");
         }
-        public async Task UpdateSprzedazAsync(Sprzedaz sprzedaz)
-        {
-            using var connection = new SqlConnection(_connectionString);
-            var query = "UPDATE Sprzedaz SET Cena = @Cena, Ilosc = @Ilosc WHERE SprzedazID = @SprzedazID";
-            var command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@Cena", sprzedaz.Cena);
-            command.Parameters.AddWithValue("@Ilosc", sprzedaz.Ilosc);
-            command.Parameters.AddWithValue("@SprzedazID", sprzedaz.SprzedazID);
+     
 
-            connection.Open();
-            await command.ExecuteNonQueryAsync();
-        }
-
-      public async Task DeleteSprzedazAsync(int sprzedazId)
-{
-    var sql = @"DELETE FROM Sprzedaz WHERE SprzedazID = @SprzedazID";
-
-    using (var connection = new SqlConnection(_connectionString))
-    {
-            await connection.ExecuteAsync(sql, new { SprzedazID = sprzedazId });
-        
-       
-    }
-}
 
 
         public async Task AddSprzedazAsync(Sprzedaz sprzedaz)
@@ -108,6 +86,71 @@ namespace Trees.Services
             await connection.ExecuteAsync(sql, new { Ilosc = magazyn.Ilosc, MagazynID = magazyn.MagazynID });
         }
 
+        public async Task UpdateSprzedazAsync(Sprzedaz nowaSprzedaz)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            // Pobierz starą sprzedaż przed aktualizacją
+            var staraSprzedaz = await connection.QueryFirstOrDefaultAsync<Sprzedaz>(
+                "SELECT * FROM Sprzedaz WHERE SprzedazID = @SprzedazID",
+                new { SprzedazID = nowaSprzedaz.SprzedazID });
+
+            // Pobierz odpowiedni magazyn
+            var magazyn = await GetMagazynAsync(nowaSprzedaz.GatunekID, nowaSprzedaz.WielkoscID, nowaSprzedaz.StoiskoID);
+
+            if (magazyn != null)
+            {
+                // Oblicz różnicę w ilości
+                var roznica = staraSprzedaz.Ilosc - nowaSprzedaz.Ilosc;
+
+                // Sprawdź, czy zmiana nie spowoduje ujemnej ilości w magazynie
+                if (magazyn.Ilosc + roznica < 0)
+                {
+                    throw new InvalidOperationException("Niewystarczająca ilość w magazynie, aby zrealizować tę zmianę.");
+                }
+
+                // Zaktualizuj sprzedaż
+                var query = "UPDATE Sprzedaz SET Cena = @Cena, Ilosc = @Ilosc WHERE SprzedazID = @SprzedazID";
+                await connection.ExecuteAsync(query, new
+                {
+                    Cena = nowaSprzedaz.Cena,
+                    Ilosc = nowaSprzedaz.Ilosc,
+                    SprzedazID = nowaSprzedaz.SprzedazID
+                });
+
+                // Zaktualizuj magazyn o różnicę w ilości
+                magazyn.Ilosc += roznica; // Dodaj różnicę do magazynu
+
+                await UpdateMagazynAsync(magazyn); // Zapisz zmiany w magazynie
+            }
+        }
+
+
+        public async Task DeleteSprzedazAsync(int sprzedazId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            // Pobierz sprzedaż, która ma zostać usunięta
+            var sprzedaz = await connection.QueryFirstOrDefaultAsync<Sprzedaz>(
+                "SELECT * FROM Sprzedaz WHERE SprzedazID = @SprzedazID", new { SprzedazID = sprzedazId });
+
+            if (sprzedaz != null)
+            {
+                // Pobierz odpowiedni magazyn
+                var magazyn = await GetMagazynAsync(sprzedaz.GatunekID, sprzedaz.WielkoscID, sprzedaz.StoiskoID);
+
+                if (magazyn != null)
+                {
+                    // Zaktualizuj ilość w magazynie, dodając z powrotem ilość z usuniętej sprzedaży
+                    magazyn.Ilosc += sprzedaz.Ilosc;
+                    await UpdateMagazynAsync(magazyn); // Zapisz zmiany w magazynie
+                }
+
+                // Usuń sprzedaż z bazy danych
+                var sql = @"DELETE FROM Sprzedaz WHERE SprzedazID = @SprzedazID";
+                await connection.ExecuteAsync(sql, new { SprzedazID = sprzedazId });
+            }
+        }
 
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAsync(Stoisko stoisko)
         {

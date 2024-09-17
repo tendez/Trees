@@ -61,11 +61,13 @@ namespace Trees.Views
                 var confirm = await DisplayAlert("Usuñ", "Czy na pewno chcesz usun¹æ ten wpis?", "Tak", "Nie");
                 if (confirm)
                 {
+                    // Usuñ sprzeda¿ i zaktualizuj magazyn
                     await _databaseService.DeleteSprzedazAsync(sprzedaz.SprzedazID);
                     await DisplayAlert("Usuniêto", "Wpis zosta³ usuniêty.", "OK");
-                    LoadSprzedaz(_stoisko); 
+                    LoadSprzedaz(_stoisko);
                 }
             }
         }
+
     }
 }
