@@ -17,7 +17,7 @@ namespace Trees
 
             if (Preferences.ContainsKey("IsLoggedIn") && Preferences.Get("IsLoggedIn", false))
             {
-                // Sprawdź, czy stoisko było wybrane wcześniej
+           
                 if (Preferences.ContainsKey("SelectedStoiskoID"))
                 {
                     int stoiskoId = Preferences.Get("SelectedStoiskoID", 0);
@@ -25,7 +25,7 @@ namespace Trees
                 }
                 else
                 {
-                    ShowLoggedInUI(); // Pokazuje UI dla użytkownika, ale bez wybranego stoiska
+                    ShowLoggedInUI(); 
                 }
             }
             else
@@ -36,16 +36,16 @@ namespace Trees
 
         private async void LoadSelectedStoisko(int stoiskoId)
         {
-            _selectedStoisko = await _databaseService.GetStoiskoByIdAsync(stoiskoId); // Dodaj metodę do DatabaseService
+            _selectedStoisko = await _databaseService.GetStoiskoByIdAsync(stoiskoId); 
             if (_selectedStoisko != null)
             {
                 NazwaStoiskaLabel.Text = _selectedStoisko.StoiskoNazwa;
                 NazwaStoiskaLabel.IsVisible = true;
-                ShowActionsUI(); // Pokazuje UI dla użytkownika z wybranym stoiskiem
+                ShowActionsUI(); 
             }
             else
             {
-                ShowLoggedInUI(); // Gdyby coś poszło nie tak
+                ShowLoggedInUI(); 
             }
         }
 
@@ -78,7 +78,7 @@ namespace Trees
             NazwaStoiskaLabel.Text = _selectedStoisko.StoiskoNazwa;
             NazwaStoiskaLabel.IsVisible = true;
 
-            // Zapisz wybrane stoisko do preferencji
+        
             Preferences.Set("SelectedStoiskoID", _selectedStoisko.StoiskoID);
 
             ShowActionsUI();
@@ -108,7 +108,7 @@ namespace Trees
         private async void OnLogoutButtonClicked(object sender, EventArgs e)
         {
             Preferences.Set("IsLoggedIn", false);
-            Preferences.Remove("SelectedStoiskoID"); // Usuwa zapisane stoisko podczas wylogowania
+            Preferences.Remove("SelectedStoiskoID");
             await Navigation.PushAsync(new Views.LoginPage());
         }
     }

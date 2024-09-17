@@ -23,9 +23,9 @@ namespace Trees.Views
 
         private async void OnDodajSprzedazClicked(object sender, EventArgs e)
         {
-            warning.IsVisible = false; // Ukryj ostrze¿enia, jeœli by³y wczeœniej widoczne
+            warning.IsVisible = false; 
 
-            // Sprawdzenie, czy wprowadzone wartoœci to liczby
+           
             if (!decimal.TryParse(CenaEntry.Text, out decimal cena))
             {
                 warning.Text = "WprowadŸ poprawn¹ liczbê w polu Cena.";
@@ -40,7 +40,7 @@ namespace Trees.Views
                 return;
             }
 
-            // Sprawdzenie, czy cena i iloœæ nie s¹ ujemne
+           
             if (cena <= 0)
             {
                 warning.Text = "Cena musi byæ wiêksza ni¿ 0.";
@@ -55,7 +55,7 @@ namespace Trees.Views
                 return;
             }
 
-            // Tworzenie obiektu Sprzedaz
+          
             var sprzedaz = new Sprzedaz
             {
                 UserID = Preferences.Get("UserID", 0),
@@ -68,10 +68,9 @@ namespace Trees.Views
                 StoiskoID = _stoisko.StoiskoID
             };
 
-            // Dodanie sprzeda¿y do bazy danych
+          
             await _databaseService.AddSprzedazAsync(sprzedaz);
 
-            // Przekierowanie do strony sukcesu
             await Navigation.PushAsync(new SukcesPage(_stoisko));
         }
     }

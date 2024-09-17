@@ -28,11 +28,11 @@ namespace Trees.Views
 
         private async void OnStoiskoSelected(object sender, SelectionChangedEventArgs e)
         {
-            var selectedStoisko = e.CurrentSelection.FirstOrDefault() as Stoisko;
+            Stoisko? selectedStoisko = e.CurrentSelection.FirstOrDefault() as Stoisko;
             if (selectedStoisko != null)
             {
-                StoiskoSelected?.Invoke(this, selectedStoisko); // Wywo³anie zdarzenia dla MainPage
-                await Navigation.PopAsync(); // Wraca do MainPage
+                StoiskoSelected?.Invoke(this, selectedStoisko); 
+                await Navigation.PopAsync(); 
             }
         }
     }

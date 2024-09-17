@@ -16,10 +16,10 @@ namespace Trees.Views
         {
             InitializeComponent();
 
-            // Sprawdzanie, czy u¿ytkownik jest ju¿ zalogowany
+         
             if (Preferences.ContainsKey("IsLoggedIn") && Preferences.Get("IsLoggedIn", false))
             {
-                // Przekierowanie do strony g³ównej, jeœli u¿ytkownik jest zalogowany
+             
                 Navigation.PushAsync(new MainPage());
             }
         }
@@ -80,25 +80,23 @@ namespace Trees.Views
 
         private string HashPassword(string password)
         {
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
+            byte[] bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            var builder = new System.Text.StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
             {
-                byte[] bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                var builder = new System.Text.StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                builder.Append(bytes[i].ToString("x2"));
             }
+            return builder.ToString();
         }
 
-        // Funkcja do pokazywania/ukrywania has³a
+      
         private void OnShowPasswordCheckBoxChanged(object sender, CheckedChangedEventArgs e)
         {
-            PasswordEntry.IsPassword = !e.Value; // Jeœli checkbox zaznaczony, has³o nie jest ukryte
+            PasswordEntry.IsPassword = !e.Value; 
         }
 
-        // Funkcja wylogowania
+     
         public async Task LogoutAsync()
         {
             Preferences.Remove("IsLoggedIn");

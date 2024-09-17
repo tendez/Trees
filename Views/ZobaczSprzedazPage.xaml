@@ -6,7 +6,7 @@
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <Frame>
-                    <StackLayout>
+                    <StackLayout >
                         <Label Text="{Binding NazwaGatunku, StringFormat='Nazwa Gatunku: {0}'}" />
                         <Label Text="{Binding OpisWielkosci, StringFormat='Opis Wielkosci: {0}'}" />
                         <Label Text="{Binding Cena, StringFormat='Cena: {0}pln'}" />
@@ -15,6 +15,11 @@
                         <Label Text="{Binding DataSprzedazy, StringFormat='Data Sprzedazy: {0}'}" />
                         <Label Text="{Binding Login, StringFormat='Login: {0}'}" />
                         <Label Text="{Binding StoiskoNazwa, StringFormat='Nazwa stoiska: {0}'}" />
+
+                       
+                            <Button Text="Edytuj" Clicked="OnEditClicked" CommandParameter="{Binding .}" />
+                            <Button Text="Usun" Clicked="OnDeleteClicked" CommandParameter="{Binding .}" />
+                     
                     </StackLayout>
                 </Frame>
             </DataTemplate>

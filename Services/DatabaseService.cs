@@ -60,6 +60,31 @@ namespace Trees.Services
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<Magazyn>("SELECT * FROM Magazyn");
         }
+        public async Task UpdateSprzedazAsync(Sprzedaz sprzedaz)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = "UPDATE Sprzedaz SET Cena = @Cena, Ilosc = @Ilosc WHERE SprzedazID = @SprzedazID";
+            var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Cena", sprzedaz.Cena);
+            command.Parameters.AddWithValue("@Ilosc", sprzedaz.Ilosc);
+            command.Parameters.AddWithValue("@SprzedazID", sprzedaz.SprzedazID);
+
+            connection.Open();
+            await command.ExecuteNonQueryAsync();
+        }
+
+      public async Task DeleteSprzedazAsync(int sprzedazId)
+{
+    var sql = @"DELETE FROM Sprzedaz WHERE SprzedazID = @SprzedazID";
+
+    using (var connection = new SqlConnection(_connectionString))
+    {
+            await connection.ExecuteAsync(sql, new { SprzedazID = sprzedazId });
+        
+       
+    }
+}
+
 
         public async Task AddSprzedazAsync(Sprzedaz sprzedaz)
         {
@@ -75,7 +100,7 @@ namespace Trees.Services
         {
             using var connection = new SqlConnection(_connectionString);
             var sql = @"
-        SELECT s.Cena,s.CalkowitaCena,s.DataSprzedazy,s.Ilosc, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa 
+        SELECT s.Cena,s.CalkowitaCena,s.DataSprzedazy,s.Ilosc, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
         FROM Sprzedaz s
         INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
         INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID

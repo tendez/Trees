@@ -36,7 +36,7 @@ namespace Trees.Views
 
         private void OnWielkoscSelected(object sender, SelectionChangedEventArgs e)
         {
-            var selectedWielkosc = e.CurrentSelection.FirstOrDefault() as Wielkosc;
+            Wielkosc? selectedWielkosc = e.CurrentSelection.FirstOrDefault() as Wielkosc;
             if (selectedWielkosc != null)
             {
               
@@ -46,8 +46,8 @@ namespace Trees.Views
 
         private async void OnDalejClicked(object sender, EventArgs e)
         {
-            
-            var selectedWielkosc = WielkoscCollectionView.SelectedItem as Wielkosc;
+
+            Wielkosc? selectedWielkosc = WielkoscCollectionView.SelectedItem as Wielkosc;
             if (selectedWielkosc != null)
             {
                 await Navigation.PushAsync(new DodajCenePage(_selectedGatunek, selectedWielkosc,_stoisko));
