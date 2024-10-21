@@ -54,6 +54,28 @@ namespace Trees.Services
             var sql = "SELECT * FROM Sprzedaz";
             return await connection.QueryAsync<Sprzedaz>(sql);
         }
+        public async Task<float> GetTotalSprzedazByStoiskoAsync(int stoiskoId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT SUM(Cena) 
+                FROM Sprzedaz 
+                WHERE StoiskoID = @StoiskoID"; // Filtruj sprzedaż dla wybranego stoiska
+            var result = await connection.ExecuteScalarAsync<float>(sql, new { StoiskoID = stoiskoId }); // Przekazanie parametru
+            return result;
+        }
+        public async Task<float> GetTotalSprzedazByStoiskoAndUserAsync(int stoiskoId, int userId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT SUM(Cena) 
+                FROM Sprzedaz 
+                WHERE StoiskoID = @StoiskoID AND UserID =@UserID"; // Filtruj sprzedaż dla wybranego stoiska
+            var result = await connection.ExecuteScalarAsync<float>(sql, new { StoiskoID = stoiskoId,UserID=userId }); // Przekazanie parametru
+            return result;
+        }
+
+
+
+
 
         public async Task<IEnumerable<Magazyn>> GetMagazynyAsync()
         {
@@ -67,8 +89,8 @@ namespace Trees.Services
         public async Task AddSprzedazAsync(Sprzedaz sprzedaz)
         {
             using var connection = new SqlConnection(_connectionString);
-            var sql = @"INSERT INTO Sprzedaz (UserID, GatunekID, WielkoscID, Cena, Ilosc, CalkowitaCena, DataSprzedazy, StoiskoID) 
-                        VALUES (@UserID, @GatunekID, @WielkoscID, @Cena, @Ilosc, @CalkowitaCena, @DataSprzedazy, @StoiskoID)";
+            var sql = @"INSERT INTO Sprzedaz (UserID, GatunekID, WielkoscID, Cena, DataSprzedazy, StoiskoID) 
+                        VALUES (@UserID, @GatunekID, @WielkoscID, @Cena, @DataSprzedazy, @StoiskoID)";
             await connection.ExecuteAsync(sql, sprzedaz);
         }
 
@@ -90,38 +112,37 @@ namespace Trees.Services
         {
             using var connection = new SqlConnection(_connectionString);
 
-            // Pobierz starą sprzedaż przed aktualizacją
+       
             var staraSprzedaz = await connection.QueryFirstOrDefaultAsync<Sprzedaz>(
                 "SELECT * FROM Sprzedaz WHERE SprzedazID = @SprzedazID",
                 new { SprzedazID = nowaSprzedaz.SprzedazID });
 
-            // Pobierz odpowiedni magazyn
+     
             var magazyn = await GetMagazynAsync(nowaSprzedaz.GatunekID, nowaSprzedaz.WielkoscID, nowaSprzedaz.StoiskoID);
 
             if (magazyn != null)
             {
-                // Oblicz różnicę w ilości
-                var roznica = staraSprzedaz.Ilosc - nowaSprzedaz.Ilosc;
+           
+                
 
-                // Sprawdź, czy zmiana nie spowoduje ujemnej ilości w magazynie
-                if (magazyn.Ilosc + roznica < 0)
+
+                if (magazyn.Ilosc + 1 < 0)
                 {
                     throw new InvalidOperationException("Niewystarczająca ilość w magazynie, aby zrealizować tę zmianę.");
                 }
 
-                // Zaktualizuj sprzedaż
-                var query = "UPDATE Sprzedaz SET Cena = @Cena, Ilosc = @Ilosc WHERE SprzedazID = @SprzedazID";
+                var query = "UPDATE Sprzedaz SET Cena = @Cena WHERE SprzedazID = @SprzedazID";
                 await connection.ExecuteAsync(query, new
                 {
                     Cena = nowaSprzedaz.Cena,
-                    Ilosc = nowaSprzedaz.Ilosc,
+                    
                     SprzedazID = nowaSprzedaz.SprzedazID
                 });
 
-                // Zaktualizuj magazyn o różnicę w ilości
-                magazyn.Ilosc += roznica; // Dodaj różnicę do magazynu
+            
+                magazyn.Ilosc += 1; 
 
-                await UpdateMagazynAsync(magazyn); // Zapisz zmiany w magazynie
+                await UpdateMagazynAsync(magazyn); 
             }
         }
 
@@ -130,23 +151,23 @@ namespace Trees.Services
         {
             using var connection = new SqlConnection(_connectionString);
 
-            // Pobierz sprzedaż, która ma zostać usunięta
+        
             var sprzedaz = await connection.QueryFirstOrDefaultAsync<Sprzedaz>(
                 "SELECT * FROM Sprzedaz WHERE SprzedazID = @SprzedazID", new { SprzedazID = sprzedazId });
 
             if (sprzedaz != null)
             {
-                // Pobierz odpowiedni magazyn
+           
                 var magazyn = await GetMagazynAsync(sprzedaz.GatunekID, sprzedaz.WielkoscID, sprzedaz.StoiskoID);
 
                 if (magazyn != null)
                 {
-                    // Zaktualizuj ilość w magazynie, dodając z powrotem ilość z usuniętej sprzedaży
-                    magazyn.Ilosc += sprzedaz.Ilosc;
-                    await UpdateMagazynAsync(magazyn); // Zapisz zmiany w magazynie
+                  
+                    magazyn.Ilosc += 1;
+                    await UpdateMagazynAsync(magazyn);
                 }
 
-                // Usuń sprzedaż z bazy danych
+            
                 var sql = @"DELETE FROM Sprzedaz WHERE SprzedazID = @SprzedazID";
                 await connection.ExecuteAsync(sql, new { SprzedazID = sprzedazId });
             }
@@ -156,7 +177,7 @@ namespace Trees.Services
         {
             using var connection = new SqlConnection(_connectionString);
             var sql = @"
-        SELECT s.Cena,s.CalkowitaCena,s.DataSprzedazy,s.Ilosc, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
+        SELECT s.Cena,s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
         FROM Sprzedaz s
         INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
         INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
@@ -171,10 +192,29 @@ namespace Trees.Services
 
             return await connection.QueryAsync<Sprzedaz>(sql, parameters);
         }
+        public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAndUserAsync(Stoisko stoisko, int userId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"
+        SELECT s.Cena,s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
+        FROM Sprzedaz s
+        INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
+        INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
+        INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
+        INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
+        WHERE s.StoiskoID = @StoiskoID AND s.UserID=@UserID";
 
 
-    
 
-       
+
+            var parameters = new { StoiskoID = stoisko.StoiskoID,UserID = userId };
+
+            return await connection.QueryAsync<Sprzedaz>(sql, parameters);
+        }
+
+
+
+
+
     }
 }

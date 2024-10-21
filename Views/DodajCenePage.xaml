@@ -5,8 +5,6 @@
     <StackLayout>
         <Label Text="Cena:" />
         <Entry x:Name="CenaEntry" Keyboard="Numeric" />
-        <Label Text="Ilość:" />
-        <Entry x:Name="IloscEntry" Keyboard="Numeric" />
         <Button Text="Dodaj Sprzedaż" Clicked="OnDodajSprzedazClicked" />
         <Label Text=" Mozna wpisywac tylko cyfry" IsVisible="false" TextColor="red" x:Name="warning"/>
     </StackLayout>

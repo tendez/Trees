@@ -32,12 +32,7 @@ namespace Trees.Views
                 return;
             }
 
-            if (!int.TryParse(IloscEntry.Text, out int ilosc))
-            {
-                warning.Text = "WprowadŸ poprawn¹ liczbê w polu Iloœæ.";
-                warning.IsVisible = true;
-                return;
-            }
+       
 
             if (cena <= 0)
             {
@@ -46,35 +41,27 @@ namespace Trees.Views
                 return;
             }
 
-            if (ilosc <= 0)
-            {
-                warning.Text = "Iloœæ musi byæ wiêksza ni¿ 0.";
-                warning.IsVisible = true;
-                return;
-            }
 
-            // Sprawdzenie dostêpnoœci w magazynie
+          
             var magazyn = await _databaseService.GetMagazynAsync(_selectedGatunek.GatunekID, _selectedWielkosc.WielkoscID, _stoisko.StoiskoID);
-            if (magazyn == null || magazyn.Ilosc < ilosc)
+            if (magazyn == null || magazyn.Ilosc < 1)
             {
                 warning.Text = "Nie ma wystarczaj¹cej iloœci towaru w magazynie.";
                 warning.IsVisible = true;
                 return;
             }
 
-            // Aktualizacja iloœci w magazynie
-            magazyn.Ilosc -= ilosc;
+        
+            magazyn.Ilosc -= 1;
             await _databaseService.UpdateMagazynAsync(magazyn);
 
-            // Dodanie sprzeda¿y
+           
             var sprzedaz = new Sprzedaz
             {
                 UserID = Preferences.Get("UserID", 0),
                 GatunekID = _selectedGatunek.GatunekID,
                 WielkoscID = _selectedWielkosc.WielkoscID,
                 Cena = cena,
-                Ilosc = ilosc,
-                CalkowitaCena = cena * ilosc,
                 DataSprzedazy = DateTime.Now,
                 StoiskoID = _stoisko.StoiskoID
             };

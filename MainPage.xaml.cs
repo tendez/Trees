@@ -53,14 +53,17 @@ namespace Trees
         {
             WybierzStoiskoButton.IsVisible = true;
             DodajSprzedazButton.IsVisible = false;
-            ZobaczSprzedazButton.IsVisible = false;
+            ZobaczMojaSprzedazButton.IsVisible = false;
+            ZobaczSprzedazStoiskaButton.IsVisible = false;
+       
             LogoutButton.IsVisible = false;
         }
 
         private void ShowActionsUI()
         {
             DodajSprzedazButton.IsVisible = true;
-            ZobaczSprzedazButton.IsVisible = true;
+            ZobaczMojaSprzedazButton.IsVisible = true;
+            ZobaczSprzedazStoiskaButton.IsVisible = true;
             LogoutButton.IsVisible = true;
             WybierzStoiskoButton.IsVisible = true;
         }
@@ -95,6 +98,25 @@ namespace Trees
         }
 
         private async void OnZobaczSprzedazClicked(object sender, EventArgs e)
+        {
+            if (_selectedStoisko == null)
+            {
+                await DisplayAlert("Błąd", "Proszę wybrać stoisko przed przeglądaniem sprzedaży.", "OK");
+                return;
+            }
+            await Navigation.PushAsync(new Views.ZobaczSprzedazPage(_selectedStoisko));
+        }
+        private async void OnZobaczMojaSprzedazClicked(object sender, EventArgs e)
+        {
+            if (_selectedStoisko == null)
+            {
+                await DisplayAlert("Błąd", "Proszę wybrać stoisko przed przeglądaniem sprzedaży.", "OK");
+                return;
+            }
+            await Navigation.PushAsync(new Views.MojaSprzedazPage(_selectedStoisko));
+        }
+
+        private async void OnZobaczSprzedazStoiskaClicked(object sender, EventArgs e)
         {
             if (_selectedStoisko == null)
             {

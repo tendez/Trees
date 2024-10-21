@@ -6,26 +6,37 @@ using System.Linq;
 
 namespace Trees.Views
 {
-    public partial class ZobaczSprzedazPage : ContentPage
+    public partial class MojaSprzedazPage : ContentPage
     {
         private readonly DatabaseService _databaseService;
         private readonly Stoisko _stoisko;
         private float totalSprzedaz;
-        public ZobaczSprzedazPage(Stoisko stoisko)
+        private int _loggedInUserId;
+
+        public MojaSprzedazPage(Stoisko stoisko)
         {
             InitializeComponent();
             _databaseService = new DatabaseService("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
             _stoisko = stoisko;
-            LoadTotalSprzedaz(stoisko);
-            LoadSprzedaz(stoisko);
+
+            // Pobierz ID zalogowanego u¿ytkownika
+            _loggedInUserId = Preferences.Get("UserID", -1);
+
+            if (_loggedInUserId == -1)
+            {
+                DisplayAlert("B³¹d", "Nie mo¿na za³adowaæ danych u¿ytkownika. Proszê spróbowaæ ponownie.", "OK");
+                return;
+            }
+
+            LoadTotalSprzedaz(stoisko, _loggedInUserId);
+            LoadSprzedaz(stoisko, _loggedInUserId);
         }
 
-
-        async void LoadTotalSprzedaz(Stoisko stoisko)
+        async void LoadTotalSprzedaz(Stoisko stoisko, int userId)
         {
             try
             {
-                totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAsync(stoisko.StoiskoID);
+                totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAndUserAsync(stoisko.StoiskoID, userId);
                 TotalSprzedazLabel.Text = $"Suma sprzeda¿y: {totalSprzedaz} z³";
             }
             catch (Exception ex)
@@ -35,11 +46,11 @@ namespace Trees.Views
             }
         }
 
-         async void LoadSprzedaz(Stoisko stoisko)
+        async void LoadSprzedaz(Stoisko stoisko, int userId)
         {
             try
             {
-                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAsync(stoisko);
+                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAndUserAsync(stoisko, userId);
                 SprzedazCollectionView.ItemsSource = sprzedazList;
             }
             catch (Exception ex)
@@ -48,11 +59,13 @@ namespace Trees.Views
                 await DisplayAlert("B³¹d", "Wyst¹pi³ b³¹d podczas ³adowania danych. Spróbuj ponownie póŸniej.", "OK");
             }
         }
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            LoadSprzedaz(_stoisko); 
+            LoadSprzedaz(_stoisko, _loggedInUserId);
         }
+
         private async void OnEditClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -60,9 +73,7 @@ namespace Trees.Views
 
             if (sprzedaz != null)
             {
-              
-               
-                await Navigation.PushAsync(new EdytujSprzedazPage(sprzedaz)); 
+                await Navigation.PushAsync(new EdytujSprzedazPage(sprzedaz));
             }
         }
 
@@ -76,13 +87,11 @@ namespace Trees.Views
                 var confirm = await DisplayAlert("Usuñ", "Czy na pewno chcesz usun¹æ ten wpis?", "Tak", "Nie");
                 if (confirm)
                 {
-            
                     await _databaseService.DeleteSprzedazAsync(sprzedaz.SprzedazID);
                     await DisplayAlert("Usuniêto", "Wpis zosta³ usuniêty.", "OK");
-                    LoadSprzedaz(_stoisko);
+                    LoadSprzedaz(_stoisko, _loggedInUserId);
                 }
             }
         }
-
     }
 }
