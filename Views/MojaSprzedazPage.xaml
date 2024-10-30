@@ -1,15 +1,18 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:Class="Trees.Views.MojaSprzedazPage">
 
     <StackLayout Padding="10">
+        <DatePicker x:Name="DataSprzedazyPicker" 
+                    Date="{x:Static sys:DateTime.Now}" 
+                    DateSelected="OnDateSelected" />
 
         <Label x:Name="TotalSprzedazLabel" 
                Text="ladowanie sumy sprzedazy..." 
                FontSize="Large" 
                HorizontalOptions="Center" 
                VerticalOptions="Start" />
-
 
         <CollectionView x:Name="SprzedazCollectionView">
             <CollectionView.ItemTemplate>
@@ -18,7 +21,7 @@
                         <StackLayout>
                             <Label Text="{Binding NazwaGatunku, StringFormat='Nazwa Gatunku: {0}'}" />
                             <Label Text="{Binding OpisWielkosci, StringFormat='Opis Wielkosci: {0}'}" />
-                            <Label Text="{Binding Cena, StringFormat='Cena: {0}pln'}" />
+                            <Label Text="{Binding Cena, StringFormat='Cena: {0} PLN'}" />
                             <Label Text="{Binding DataSprzedazy, StringFormat='Data Sprzedazy: {0}'}" />
                             <Label Text="{Binding Login, StringFormat='Login: {0}'}" />
                             <Button Text="Edytuj" Clicked="OnEditClicked" CommandParameter="{Binding .}" />
@@ -29,5 +32,4 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
     </StackLayout>
-
 </ContentPage>

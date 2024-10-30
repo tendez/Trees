@@ -1,9 +1,13 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:Class="Trees.Views.ZobaczSprzedazPage">
 
     <StackLayout Padding="10">
-
+        <DatePicker x:Name="DataSprzedazyPicker" 
+             Date="{x:Static sys:DateTime.Now}" 
+             DateSelected="OnDateSelected" />
+        
         <Label x:Name="TotalSprzedazLabel" 
                Text="ladowanie sumy sprzedazy..." 
                FontSize="Large" 
@@ -15,12 +19,11 @@
                 <DataTemplate>
                     <Frame>
                         <StackLayout>
-                           
+
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
                                 <Label Text="{Binding NazwaGatunku, StringFormat='{0}'}" 
-                                      />
-                                <Label Text="{Binding OpisWielkosci, StringFormat=' {0}'}" 
-                                       />
+   />
+                                <Label Text="{Binding OpisWielkosci, StringFormat=' {0}'}" />
                             </StackLayout>
 
                             <Label Text="{Binding Cena, StringFormat='Cena: {0} pln'}" />

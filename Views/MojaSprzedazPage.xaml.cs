@@ -28,15 +28,15 @@ namespace Trees.Views
                 return;
             }
 
-            LoadTotalSprzedaz(stoisko, _loggedInUserId);
-            LoadSprzedaz(stoisko, _loggedInUserId);
+            LoadTotalSprzedaz(_stoisko, _loggedInUserId, DateTime.Now);
+            LoadSprzedaz(_stoisko, _loggedInUserId, DateTime.Now);
         }
 
-        async void LoadTotalSprzedaz(Stoisko stoisko, int userId)
+        async void LoadTotalSprzedaz(Stoisko stoisko, int userId, DateTime date)
         {
             try
             {
-                totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAndUserAsync(stoisko.StoiskoID, userId);
+                float totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAndUserAndDateAsync(stoisko.StoiskoID, userId, date);
                 TotalSprzedazLabel.Text = $"Suma sprzeda¿y: {totalSprzedaz} z³";
             }
             catch (Exception ex)
@@ -46,11 +46,11 @@ namespace Trees.Views
             }
         }
 
-        async void LoadSprzedaz(Stoisko stoisko, int userId)
+        async void LoadSprzedaz(Stoisko stoisko, int userId, DateTime date)
         {
             try
             {
-                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAndUserAsync(stoisko, userId);
+                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAndUserAndDateAsync(stoisko, userId, date);
                 SprzedazCollectionView.ItemsSource = sprzedazList;
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace Trees.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            LoadSprzedaz(_stoisko, _loggedInUserId);
+            LoadSprzedaz(_stoisko, _loggedInUserId, DateTime.Now);
         }
 
         private async void OnEditClicked(object sender, EventArgs e)
@@ -89,9 +89,14 @@ namespace Trees.Views
                 {
                     await _databaseService.DeleteSprzedazAsync(sprzedaz.SprzedazID);
                     await DisplayAlert("Usuniêto", "Wpis zosta³ usuniêty.", "OK");
-                    LoadSprzedaz(_stoisko, _loggedInUserId);
+                    LoadSprzedaz(_stoisko, _loggedInUserId, DateTime.Now);
                 }
             }
+        }
+        private void OnDateSelected(object sender, DateChangedEventArgs e)
+        {
+            LoadSprzedaz(_stoisko, _loggedInUserId, e.NewDate);
+            LoadTotalSprzedaz(_stoisko, _loggedInUserId, e.NewDate);
         }
     }
 }

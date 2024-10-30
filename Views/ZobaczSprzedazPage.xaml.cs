@@ -16,16 +16,16 @@ namespace Trees.Views
             InitializeComponent();
             _databaseService = new DatabaseService("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
             _stoisko = stoisko;
-            LoadTotalSprzedaz(stoisko);
-            LoadSprzedaz(stoisko);
+            LoadTotalSprzedaz(stoisko, DateTime.Now);
+            LoadSprzedaz(stoisko, DateTime.Now);
         }
 
 
-        async void LoadTotalSprzedaz(Stoisko stoisko)
+        async void LoadTotalSprzedaz(Stoisko stoisko, DateTime date)
         {
             try
             {
-                totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAsync(stoisko.StoiskoID);
+                totalSprzedaz = await _databaseService.GetTotalSprzedazByStoiskoAndDateAsync(stoisko.StoiskoID,date);
                 TotalSprzedazLabel.Text = $"Suma sprzeda¿y: {totalSprzedaz} z³";
             }
             catch (Exception ex)
@@ -35,11 +35,11 @@ namespace Trees.Views
             }
         }
 
-         async void LoadSprzedaz(Stoisko stoisko)
+         async void LoadSprzedaz(Stoisko stoisko, DateTime date)
         {
             try
             {
-                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAsync(stoisko);
+                var sprzedazList = await _databaseService.GetSprzedazWithDetailsAndDateAsync(stoisko,date);
                 SprzedazCollectionView.ItemsSource = sprzedazList;
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace Trees.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            LoadSprzedaz(_stoisko); 
+            LoadSprzedaz(_stoisko, DateTime.Now); 
         }
         private async void OnEditClicked(object sender, EventArgs e)
         {
@@ -79,10 +79,16 @@ namespace Trees.Views
             
                     await _databaseService.DeleteSprzedazAsync(sprzedaz.SprzedazID);
                     await DisplayAlert("Usuniêto", "Wpis zosta³ usuniêty.", "OK");
-                    LoadSprzedaz(_stoisko);
+                    LoadSprzedaz(_stoisko, DateTime.Now);
                 }
             }
         }
+        private void OnDateSelected(object sender, DateChangedEventArgs e)
+        {
+            LoadSprzedaz(_stoisko,  e.NewDate);
+            LoadTotalSprzedaz(_stoisko,  e.NewDate);
+        }
+
 
     }
 }

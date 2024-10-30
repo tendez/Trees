@@ -173,25 +173,7 @@ namespace Trees.Services
             }
         }
 
-        public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAsync(Stoisko stoisko)
-        {
-            using var connection = new SqlConnection(_connectionString);
-            var sql = @"
-        SELECT s.Cena,s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
-        FROM Sprzedaz s
-        INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
-        INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
-        INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
-        INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
-        WHERE s.StoiskoID = @StoiskoID";
-
-
-       
-         
-            var parameters = new { StoiskoID = stoisko.StoiskoID };
-
-            return await connection.QueryAsync<Sprzedaz>(sql, parameters);
-        }
+      
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAndUserAsync(Stoisko stoisko, int userId)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -208,6 +190,69 @@ namespace Trees.Services
 
 
             var parameters = new { StoiskoID = stoisko.StoiskoID,UserID = userId };
+
+            return await connection.QueryAsync<Sprzedaz>(sql, parameters);
+        }
+        public async Task<float> GetTotalSprzedazByStoiskoAndDateAsync(int stoiskoId, DateTime date)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT SUM(Cena) 
+                FROM Sprzedaz 
+                WHERE StoiskoID = @StoiskoID AND CAST(DataSprzedazy AS DATE) = @Date";
+            return await connection.ExecuteScalarAsync<float>(sql, new { StoiskoID = stoiskoId, Date = date.Date });
+        }
+        public async Task<float> GetTotalSprzedazByStoiskoAndUserAndDateAsync(int stoiskoId, int userId, DateTime date)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT SUM(Cena) 
+                FROM Sprzedaz 
+                WHERE StoiskoID = @StoiskoID AND UserID = @UserID AND CAST(DataSprzedazy AS DATE) = @Date";
+            return await connection.ExecuteScalarAsync<float>(sql, new { StoiskoID = stoiskoId, UserID = userId, Date = date.Date });
+        }
+
+        public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAndUserAndDateAsync(Stoisko stoisko, int userId, DateTime date)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"
+        SELECT s.Cena, s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa, s.SprzedazID, s.GatunekID, s.StoiskoID, s.WielkoscID
+        FROM Sprzedaz s
+        INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
+        INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
+        INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
+        INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
+        WHERE s.StoiskoID = @StoiskoID AND s.UserID = @UserID AND CAST(s.DataSprzedazy AS DATE) = @Date";
+            return await connection.QueryAsync<Sprzedaz>(sql, new { StoiskoID = stoisko.StoiskoID, UserID = userId, Date = date.Date });
+        }
+        public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAndDateAsync(Stoisko stoisko, DateTime date)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"
+        SELECT s.Cena, s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa, s.SprzedazID, s.GatunekID, s.StoiskoID, s.WielkoscID
+        FROM Sprzedaz s
+        INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
+        INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
+        INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
+        INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
+
+        WHERE s.StoiskoID = @StoiskoID AND CAST(s.DataSprzedazy AS DATE) = @Date";
+            return await connection.QueryAsync<Sprzedaz>(sql, new { StoiskoID = stoisko.StoiskoID,  Date = date.Date });
+        }
+        public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAsync(Stoisko stoisko)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"
+        SELECT s.Cena,s.DataSprzedazy, g.NazwaGatunku, w.OpisWielkosci, u.Login, st.StoiskoNazwa,s.sprzedazID,s.gatunekID,s.stoiskoID,s.WielkoscID 
+        FROM Sprzedaz s
+        INNER JOIN Gatunek g ON s.GatunekID = g.GatunekID
+        INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
+        INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
+        INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
+        WHERE s.StoiskoID = @StoiskoID";
+
+
+
+
+            var parameters = new { StoiskoID = stoisko.StoiskoID };
 
             return await connection.QueryAsync<Sprzedaz>(sql, parameters);
         }
