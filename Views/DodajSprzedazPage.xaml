@@ -8,12 +8,12 @@
                         SelectionChanged="OnGatunekSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="10">
+                    <Border Padding="30" BackgroundColor="LightGray" Margin="0,0,0,10">
                         <Label Text="{Binding NazwaGatunku}"
-                               FontSize="16"
+                               FontSize="25"
                                VerticalOptions="Center"
                                HorizontalOptions="StartAndExpand" />
-                        </Border>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
@@ -23,6 +23,11 @@
                 IsEnabled="False"
                 Clicked="OnDalejClicked"
                 VerticalOptions="End"
-                HorizontalOptions="FillAndExpand" />
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="#3498db"
+                TextColor="White"
+                FontSize="Medium"
+                HeightRequest="80"
+                CornerRadius="10" />
     </StackLayout>
 </ContentPage>

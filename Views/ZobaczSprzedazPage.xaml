@@ -3,39 +3,94 @@
              xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:Class="Trees.Views.ZobaczSprzedazPage">
 
-    <StackLayout Padding="10">
-        <DatePicker x:Name="DataSprzedazyPicker" 
-             Date="{x:Static sys:DateTime.Now}" 
-             DateSelected="OnDateSelected" />
-        
-        <Label x:Name="TotalSprzedazLabel" 
-               Text="ladowanie sumy sprzedazy..." 
-               FontSize="Large" 
-               HorizontalOptions="Center" 
-               VerticalOptions="Start" />
+    <ScrollView>
+        <StackLayout Padding="15">
 
-        <CollectionView x:Name="SprzedazCollectionView">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame>
-                        <StackLayout>
+            <!-- DataSprzedazyPicker -->
+            <DatePicker x:Name="DataSprzedazyPicker" 
+                        Date="{x:Static sys:DateTime.Now}" 
+                        DateSelected="OnDateSelected"
+                        FontSize="Medium"
+                        HorizontalOptions="FillAndExpand" />
 
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                                <Label Text="{Binding NazwaGatunku, StringFormat='{0}'}" 
-   />
-                                <Label Text="{Binding OpisWielkosci, StringFormat=' {0}'}" />
+            <!-- TotalSprzedazLabel -->
+            <Label x:Name="TotalSprzedazLabel" 
+                   Text="Ladowanie sumy sprzedazy..." 
+                   FontSize="Large" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="StartAndExpand"
+                   Margin="0,10,0,20" />
+
+            <!-- SprzedazCollectionView -->
+            <CollectionView x:Name="SprzedazCollectionView"
+                            ItemsLayout="VerticalList"
+                            Margin="0,0,0,20">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="5"
+                               Padding="10"
+                               BorderColor="LightGray"
+                               CornerRadius="10"
+                               BackgroundColor="White"
+                               HasShadow="True">
+                            <StackLayout Spacing="8">
+
+                                <!-- NazwaGatunku and OpisWielkosci -->
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                                    <Label Text="{Binding NazwaGatunku, StringFormat='{0}'}" 
+                                           FontSize="Medium"
+                                           FontAttributes="Bold"
+                                           TextColor="Black" />
+                                    <Label Text="{Binding OpisWielkosci, StringFormat=' {0}'}" 
+                                           FontSize="Medium"
+                                           TextColor="Gray" />
+                                </StackLayout>
+
+                                <!-- Cena -->
+                                <Label Text="{Binding Cena, StringFormat='Cena: {0} PLN'}" 
+                                       FontSize="Small"
+                                       TextColor="DarkGreen" />
+
+                                <!-- DataSprzedazy -->
+                                <Label Text="{Binding DataSprzedazy, StringFormat='Data sprzedazy: {0:d}'}" 
+                                       FontSize="Small"
+                                       TextColor="Black" />
+
+                                <!-- Login -->
+                                <Label Text="{Binding Login, StringFormat='Login: {0}'}" 
+                                       FontSize="Small"
+                                       TextColor="DarkGray" />
+
+                                <!-- Buttons -->
+                                <Grid ColumnDefinitions="*,*"
+                                      RowDefinitions="Auto">
+                                    <Button Text="Edytuj" 
+                                            BackgroundColor="LightSkyBlue"
+                                            TextColor="White"
+                                            Clicked="OnEditClicked" 
+                                            CommandParameter="{Binding .}"
+                                            Margin="0,5,5,0"
+                                            CornerRadius="5"
+                                            HeightRequest="35" />
+                                    <Button Text="Usun" 
+                                            BackgroundColor="Tomato"
+                                            TextColor="White"
+                                            Clicked="OnDeleteClicked" 
+                                            CommandParameter="{Binding .}"
+                                            Margin="5,5,0,0"
+                                            CornerRadius="5"
+                                            HeightRequest="35"
+                                            Grid.Column="1" />
+                                </Grid>
+
                             </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-                            <Label Text="{Binding Cena, StringFormat='Cena: {0} pln'}" />
-                            <Label Text="{Binding DataSprzedazy, StringFormat='Data Sprzedazy: {0}'}" />
-                            <Label Text="{Binding Login, StringFormat='Login: {0}'}" />
-                            <Button Text="Edytuj" Clicked="OnEditClicked" CommandParameter="{Binding .}" />
-                            <Button Text="Usun" Clicked="OnDeleteClicked" CommandParameter="{Binding .}" />
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </StackLayout>
+        </StackLayout>
+    </ScrollView>
 
 </ContentPage>

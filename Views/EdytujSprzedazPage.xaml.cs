@@ -23,14 +23,14 @@ namespace Trees.Views
             try
             {
            
-                if (string.IsNullOrWhiteSpace(CenaEntry.Text) || string.IsNullOrWhiteSpace(IloscEntry.Text))
+                if (string.IsNullOrWhiteSpace(CenaEntry.Text) )
                 {
-                    await DisplayAlert("B³¹d", "Cena i iloœæ nie mog¹ byæ puste.", "OK");
+                    await DisplayAlert("B³¹d", "Cena  nie moze byæ pusta.", "OK");
                     return;
                 }
 
                
-                if (!decimal.TryParse(CenaEntry.Text, out decimal nowaCena) || !int.TryParse(IloscEntry.Text, out int nowaIlosc))
+                if (!decimal.TryParse(CenaEntry.Text, out decimal nowaCena) )
                 {
                     await DisplayAlert("B³¹d", "Wprowadzone wartoœci musz¹ byæ liczbami.", "OK");
                     return;
@@ -43,12 +43,7 @@ namespace Trees.Views
                     return;
                 }
 
-                if (nowaIlosc <= 0)
-                {
-                    await DisplayAlert("B³¹d", "Iloœæ musi byæ wiêksza od zera.", "OK");
-                    return;
-                }
-
+              
               
                 _sprzedaz.Cena = nowaCena;
               
