@@ -8,7 +8,7 @@
                         SelectionChanged="OnGatunekSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="30" BackgroundColor="LightGray" Margin="0,0,0,10">
+                    <Border Padding="20" BackgroundColor="LightGray" Margin="0,0,0,5">
                         <Label Text="{Binding NazwaGatunku}"
                                FontSize="25"
                                VerticalOptions="Center"

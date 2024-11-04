@@ -60,7 +60,7 @@ namespace Trees.Views
             }
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
             LoadSprzedaz(_stoisko, _loggedInUserId, DateTime.Now);

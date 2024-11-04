@@ -48,10 +48,10 @@ namespace Trees.Views
                 await DisplayAlert("B³¹d", "Wyst¹pi³ b³¹d podczas ³adowania danych. Spróbuj ponownie póŸniej.", "OK");
             }
         }
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            LoadSprzedaz(_stoisko, DateTime.Now); 
+            LoadSprzedaz(_stoisko, DateTime.Now);
         }
         private async void OnEditClicked(object sender, EventArgs e)
         {

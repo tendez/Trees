@@ -19,6 +19,17 @@ namespace Trees.Views
             _selectedGatunek = selectedGatunek;
             _selectedWielkosc = selectedWielkosc;
             _stoisko = stoisko;
+            Loaded += Page_Loaded;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+        
+        }
+        private void Page_Loaded(object sender, EventArgs e)
+        {
+            CenaEntry.Focus(); // Ustawienie automatycznego fokusu na pole CenaEntry
         }
 
         private async void OnDodajSprzedazClicked(object sender, EventArgs e)
@@ -32,8 +43,6 @@ namespace Trees.Views
                 return;
             }
 
-       
-
             if (cena <= 0)
             {
                 warning.Text = "Cena musi byæ wiêksza ni¿ 0.";
@@ -41,8 +50,6 @@ namespace Trees.Views
                 return;
             }
 
-
-          
             var magazyn = await _databaseService.GetMagazynAsync(_selectedGatunek.GatunekID, _selectedWielkosc.WielkoscID, _stoisko.StoiskoID);
             if (magazyn == null || magazyn.Ilosc < 1)
             {
@@ -51,11 +58,9 @@ namespace Trees.Views
                 return;
             }
 
-        
             magazyn.Ilosc -= 1;
             await _databaseService.UpdateMagazynAsync(magazyn);
 
-           
             var sprzedaz = new Sprzedaz
             {
                 UserID = Preferences.Get("UserID", 0),
@@ -70,6 +75,5 @@ namespace Trees.Views
 
             await Navigation.PushAsync(new SukcesPage(_stoisko));
         }
-
     }
 }

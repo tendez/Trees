@@ -37,28 +37,28 @@
                             <StackLayout Spacing="8">
 
                                 <!-- NazwaGatunku -->
-                                <Label Text="{Binding NazwaGatunku, StringFormat='Nazwa Gatunku: {0}'}"
+                                <Label Text="{Binding NazwaGatunku, StringFormat=' {0}'}"
                                        FontSize="Medium"
                                        FontAttributes="Bold"
                                        TextColor="Black" />
 
                                 <!-- OpisWielkosci -->
-                                <Label Text="{Binding OpisWielkosci, StringFormat='Opis Wielkosci: {0}'}"
+                                <Label Text="{Binding OpisWielkosci, StringFormat=' {0}'}"
                                        FontSize="Small"
                                        TextColor="Gray" />
 
                                 <!-- Cena -->
-                                <Label Text="{Binding Cena, StringFormat='Cena: {0} PLN'}"
+                                <Label Text="{Binding Cena, StringFormat=' {0} PLN'}"
                                        FontSize="Small"
                                        TextColor="DarkGreen" />
 
                                 <!-- DataSprzedazy -->
-                                <Label Text="{Binding DataSprzedazy, StringFormat='Data sprzedazy: {0:d}'}"
+                                <Label Text="{Binding DataSprzedazy, StringFormat=' {0:d}'}"
                                        FontSize="Small"
                                        TextColor="Black" />
 
                                 <!-- Login -->
-                                <Label Text="{Binding Login, StringFormat='Login: {0}'}"
+                                <Label Text="{Binding Login, StringFormat=' {0}'}"
                                        FontSize="Small"
                                        TextColor="DarkGray" />
 
