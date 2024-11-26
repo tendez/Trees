@@ -47,6 +47,8 @@ namespace Trees.Services
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<Stoisko>("SELECT * FROM Stoisko");
         }
+       
+   
 
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazeAsync()
         {
@@ -82,7 +84,23 @@ namespace Trees.Services
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<Magazyn>("SELECT * FROM Magazyn");
         }
-     
+        public async Task<IEnumerable<WarehouseItem>> GetMagazynAsync(int stoiskoId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var sql = @"SELECT 
+                    m.ilosc, 
+                    g.nazwagatunku, 
+                    w.opiswielkosci 
+                FROM Magazyn m
+                INNER JOIN Gatunek g ON m.GatunekID = g.GatunekID
+                INNER JOIN Wielkosc w ON m.WielkoscID = w.WielkoscID
+                WHERE m.StoiskoID = @StoiskoID";
+
+            return await connection.QueryAsync<WarehouseItem>(sql, new { StoiskoID = stoiskoId });
+        }
+
+
+
 
 
 

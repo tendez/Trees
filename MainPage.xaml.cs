@@ -8,6 +8,7 @@ namespace Trees
     public partial class MainPage : ContentPage
     {
         public Stoisko _selectedStoisko;
+        private int _loggedInUserId;
         private readonly DatabaseService _databaseService;
 
         public MainPage()
@@ -17,7 +18,16 @@ namespace Trees
 
             if (Preferences.ContainsKey("IsLoggedIn") && Preferences.Get("IsLoggedIn", false))
             {
-           
+                _loggedInUserId = Preferences.Get("UserID", -1);
+
+                if (_loggedInUserId == -1)
+                {
+                    DisplayAlert("Błąd", "Nie można załadować danych użytkownika. Proszę spróbować ponownie.", "OK");
+                    return;
+                }
+
+                CheckUserRoleAndRedirect(); // Sprawdzenie roli użytkownika
+
                 if (Preferences.ContainsKey("SelectedStoiskoID"))
                 {
                     int stoiskoId = Preferences.Get("SelectedStoiskoID", 0);
@@ -25,7 +35,7 @@ namespace Trees
                 }
                 else
                 {
-                    ShowLoggedInUI(); 
+                    ShowLoggedInUI();
                 }
             }
             else
@@ -34,18 +44,36 @@ namespace Trees
             }
         }
 
+        private async void CheckUserRoleAndRedirect()
+        {
+            try
+            {
+                var users = await _databaseService.GetUzytkownicyAsync();
+                var loggedInUser = users.FirstOrDefault(u => u.UserID == _loggedInUserId);
+
+                if (loggedInUser != null && loggedInUser.Role == "admin")
+                {
+                    await Navigation.PushAsync(new Views.AdminView());
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Błąd", $"Wystąpił problem podczas sprawdzania roli użytkownika: {ex.Message}", "OK");
+            }
+        }
+
         private async void LoadSelectedStoisko(int stoiskoId)
         {
-            _selectedStoisko = await _databaseService.GetStoiskoByIdAsync(stoiskoId); 
+            _selectedStoisko = await _databaseService.GetStoiskoByIdAsync(stoiskoId);
             if (_selectedStoisko != null)
             {
                 NazwaStoiskaLabel.Text = _selectedStoisko.StoiskoNazwa;
                 NazwaStoiskaLabel.IsVisible = true;
-                ShowActionsUI(); 
+                ShowActionsUI();
             }
             else
             {
-                ShowLoggedInUI(); 
+                ShowLoggedInUI();
             }
         }
 
@@ -55,7 +83,7 @@ namespace Trees
             DodajSprzedazButton.IsVisible = false;
             ZobaczMojaSprzedazButton.IsVisible = false;
             ZobaczSprzedazStoiskaButton.IsVisible = false;
-       
+
             LogoutButton.IsVisible = false;
         }
 
