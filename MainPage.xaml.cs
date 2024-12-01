@@ -14,8 +14,7 @@ namespace Trees
         public MainPage()
         {
             InitializeComponent();
-            _databaseService = new DatabaseService("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-
+            _databaseService = new DatabaseService();
             if (Preferences.ContainsKey("IsLoggedIn") && Preferences.Get("IsLoggedIn", false))
             {
                 _loggedInUserId = Preferences.Get("UserID", -1);

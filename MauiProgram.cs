@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Trees.Models;  // Upewnij się, że masz odpowiednią przestrzeń nazw
 
 namespace Trees
 {
@@ -15,8 +16,11 @@ namespace Trees
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            // Rejestracja klasy ConnectionString jako Singleton w DI
+            builder.Services.AddSingleton<ConnectionString>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

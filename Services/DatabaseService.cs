@@ -11,11 +11,12 @@ namespace Trees.Services
 {
     public class DatabaseService
     {
-        private readonly string _connectionString = "Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        private readonly string _connectionString;
 
-        public DatabaseService(string connectionString)
+        public DatabaseService()
         {
-            _connectionString = connectionString;
+            ConnectionString connectionString = new ConnectionString(); // Tworzenie instancji klasy ConnectionString
+            _connectionString = connectionString.DefaultConnection; // Uzyskanie dostępu do właściwości DefaultConnection
         }
         public async Task<Stoisko> GetStoiskoByIdAsync(int stoiskoId)
         {
@@ -88,6 +89,7 @@ namespace Trees.Services
         {
             using var connection = new SqlConnection(_connectionString);
             var sql = @"SELECT 
+                    m.MagazynID,
                     m.ilosc, 
                     g.nazwagatunku, 
                     w.opiswielkosci 
@@ -238,7 +240,7 @@ namespace Trees.Services
         INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
         INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
         INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
-        WHERE s.StoiskoID = @StoiskoID AND s.UserID = @UserID AND CAST(s.DataSprzedazy AS DATE) = @Date";
+        WHERE s.StoiskoID = @StoiskoID AND s.UserID = @UserID AND CAST(s.DataSprzedazy AS DATE) = @Date order by s.sprzedazID desc";
             return await connection.QueryAsync<Sprzedaz>(sql, new { StoiskoID = stoisko.StoiskoID, UserID = userId, Date = date.Date });
         }
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAndDateAsync(Stoisko stoisko, DateTime date)
@@ -252,7 +254,7 @@ namespace Trees.Services
         INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
         INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
 
-        WHERE s.StoiskoID = @StoiskoID AND CAST(s.DataSprzedazy AS DATE) = @Date";
+        WHERE s.StoiskoID = @StoiskoID AND CAST(s.DataSprzedazy AS DATE) = @Date order by s.sprzedazID desc ";
             return await connection.QueryAsync<Sprzedaz>(sql, new { StoiskoID = stoisko.StoiskoID,  Date = date.Date });
         }
         public async Task<IEnumerable<Sprzedaz>> GetSprzedazWithDetailsAsync(Stoisko stoisko)
@@ -265,7 +267,7 @@ namespace Trees.Services
         INNER JOIN Wielkosc w ON s.WielkoscID = w.WielkoscID
         INNER JOIN Uzytkownicy u ON s.UserID = u.UserID
         INNER JOIN Stoisko st ON s.StoiskoID = st.StoiskoID
-        WHERE s.StoiskoID = @StoiskoID";
+        WHERE s.StoiskoID = @StoiskoID order by s.sprzedazID desc";
 
 
 

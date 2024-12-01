@@ -16,8 +16,7 @@ namespace Trees.Views
         public WyborWielkosciPage(Gatunek selectedGatunek, Stoisko stoisko)
         {
             InitializeComponent();
-            _databaseService = new DatabaseService("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-
+            _databaseService = new DatabaseService();
             _selectedGatunek = selectedGatunek;
             _stoisko = stoisko;
             LoadWielkosci();

@@ -1,6 +1,5 @@
 using Microsoft.Maui.Controls;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trees.Models;
@@ -15,10 +14,13 @@ namespace Trees.Views
 
         public WarehousePage()
         {
+
             InitializeComponent();
-            _databaseService = new DatabaseService("Data Source=christmastreessofijowka.database.windows.net;Initial Catalog=Trees;User ID=mikolaj;Password=Qwerty123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            _databaseService = new DatabaseService();
             LoadStoiska();
+
         }
+
 
         private async void LoadStoiska()
         {
@@ -43,29 +45,81 @@ namespace Trees.Views
             MagazynCollectionView.IsVisible = true;
         }
 
-
-
         private async void OnIncreaseQuantityClicked(object sender, EventArgs e)
         {
-            var button = (Button)sender;
-            var magazyn = (Magazyn)button.BindingContext;
+            if (sender is Button button && button.CommandParameter is WarehouseItem item)
+            {
+                var parent = button.Parent as StackLayout;
+                var entry = parent?.FindByName<Entry>("EntryIlosc");
+                if (entry != null && int.TryParse(entry.Text, out int quantity))
+                {
+                    item.Ilosc += quantity;
 
-            magazyn.Ilosc += 1;
-            await _databaseService.UpdateMagazynAsync(magazyn);
-            await LoadMagazyn(_selectedStoisko.StoiskoID);
+                    // Zaktualizuj w bazie danych
+                    await _databaseService.UpdateMagazynAsync(new Magazyn
+                    {
+                        Ilosc = item.Ilosc,
+                        MagazynID = item.MagazynID
+                    });
+
+                    // Odœwie¿ CollectionView
+                    await RefreshCollectionViewAsync();
+
+                    // Wymuszenie "roz³¹czenia" pickera po klikniêciu
+                    ResetPickerFocus();
+                }
+            }
         }
 
         private async void OnDecreaseQuantityClicked(object sender, EventArgs e)
         {
-            var button = (Button)sender;
-            var magazyn = (Magazyn)button.BindingContext;
-
-            if (magazyn.Ilosc > 0)
+            if (sender is Button button && button.CommandParameter is WarehouseItem item)
             {
-                magazyn.Ilosc -= 1;
-                await _databaseService.UpdateMagazynAsync(magazyn);
-                await LoadMagazyn(_selectedStoisko.StoiskoID);
+                var parent = button.Parent as StackLayout;
+                var entry = parent?.FindByName<Entry>("EntryIlosc");
+                if (entry != null && int.TryParse(entry.Text, out int quantity))
+                {
+                    item.Ilosc -= quantity;
+
+                    // Zaktualizuj w bazie danych
+                    await _databaseService.UpdateMagazynAsync(new Magazyn
+                    {
+                        Ilosc = item.Ilosc,
+                        MagazynID = item.MagazynID
+                    });
+
+                    // Odœwie¿ CollectionView
+                    await RefreshCollectionViewAsync();
+
+                    // Wymuszenie "roz³¹czenia" pickera po klikniêciu
+                    ResetPickerFocus();
+                }
             }
         }
+
+        /// <summary>
+        /// Zapobiega rozwijaniu pickera przez wymuszenie "utracenia" jego fokusu.
+        /// </summary>
+        private void ResetPickerFocus()
+        {
+            // Odwo³anie do pickera
+            if (StoiskoPicker != null)
+            {
+                StoiskoPicker.IsEnabled = false;
+                StoiskoPicker.IsEnabled = true; // Przywracamy mo¿liwoœæ interakcji
+            }
+        }
+
+        /// <summary>
+        /// Odœwie¿a dane w CollectionView bez resetowania Pickera.
+        /// </summary>
+        private async Task RefreshCollectionViewAsync()
+        {
+            // Ustaw nowe Ÿród³o danych dla CollectionView
+         
+            MagazynCollectionView.ItemsSource = await _databaseService.GetMagazynAsync(_selectedStoisko.StoiskoID);
+        }
+
+
     }
 }
