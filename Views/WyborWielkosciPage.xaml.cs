@@ -36,17 +36,37 @@ namespace Trees.Views
             // Filtracja w zaleznosci od wybranego gatunku, tylko dla okreslonych kolorow
             if (_selectedGatunek.NazwaGatunku == "Swierk Pospolity Donica")
             {
-                return wielkosci.Where(w => w.OpisWielkosci == "Zolta" || w.OpisWielkosci == "Niebieska" || w.OpisWielkosci == "Biala" || w.OpisWielkosci == "Czerwona" || w.OpisWielkosci == "Zielona");
+                return wielkosci.Where(w => w.OpisWielkosci == "70-90cm" || w.OpisWielkosci == "90-120cm" || w.OpisWielkosci == "130-160cm" || w.OpisWielkosci == "170-180cm" || w.OpisWielkosci == "190-220cm");
             }
             else if (_selectedGatunek.NazwaGatunku == "Swierk Srebrny Donica")
             {
-                return wielkosci.Where(w => w.OpisWielkosci == "Zolta" || w.OpisWielkosci == "Czarna" || w.OpisWielkosci == "Biala");
+                return wielkosci.Where(w => w.OpisWielkosci == "70-90cm" || w.OpisWielkosci == "90-120cm" || w.OpisWielkosci == "130-160cm");
             }
             else if (_selectedGatunek.NazwaGatunku == "Swierk Pospolity")
             {
-                return wielkosci.Where(w => w.OpisWielkosci == "Pomaranczowa" || w.OpisWielkosci == "Czarna" || w.OpisWielkosci == "Biala");
+                return wielkosci.Where(w => w.OpisWielkosci == "130-160cm" || w.OpisWielkosci == "170-210cm" || w.OpisWielkosci == "220-270cm");
             }
-            // W przypadku braku dopasowania do zadnego gatunku, zwracamy wszystkie wielkosci
+            else if (_selectedGatunek.NazwaGatunku == "Jodla")
+            {
+                return wielkosci.Where(w => w.OpisWielkosci == "120-150cm" || w.OpisWielkosci == "150-200cm" || w.OpisWielkosci == "200-250cm" || w.OpisWielkosci == "280-330cm" || w.OpisWielkosci == "340-440cm" || w.OpisWielkosci == "450-550cm");
+            }
+            else if (_selectedGatunek.NazwaGatunku == "Jodla Donica")
+            {
+                return wielkosci.Where(w => w.OpisWielkosci == "80-100cm" || w.OpisWielkosci == "100-130cm" || w.OpisWielkosci == "130-160cm");
+            }
+            else if (_selectedGatunek.NazwaGatunku == "Swierk Srebrny")
+            {
+                return wielkosci.Where(w => w.OpisWielkosci == "130-160cm" || w.OpisWielkosci == "170-210cm" || w.OpisWielkosci == "220-270cm");
+            }
+            else if (_selectedGatunek.NazwaGatunku == "Stojak Metalowy")
+            {
+                return wielkosci.Where(w => w.OpisWielkosci == "standard");
+            }
+            else if (_selectedGatunek.NazwaGatunku == "Stojak Plastikowy")
+            {
+                return wielkosci.Where(w => w.OpisWielkosci == "standard" );
+            }
+
             return wielkosci;
         }
 
