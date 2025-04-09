@@ -88,7 +88,7 @@
 3. **Skonfiguruj połączenie z bazą danych** w pliku `DatabaseService.cs`:
 
    ```csharp
-   string _connectionString = "Data Source=192.168.0.106;Initial Catalog=Trees;User ID=sa;Password=12345;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False";
+   string _connectionString = "";
    ```
 
    🔧 Dostosuj parametry do własnego środowiska.
