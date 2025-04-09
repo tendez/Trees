@@ -1,124 +1,123 @@
-# 🌲 Trees – System Zarządzania Sprzedażą Drzewek
+# 🌲 Trees – Tree Sales Management System
 
-## 📋 Przegląd
+## 📋 Overview
 
-**Trees** to aplikacja mobilna zbudowana przy użyciu .NET MAUI, zaprojektowana do zarządzania sprzedażą drzewek na stoiskach handlowych. Umożliwia śledzenie sprzedaży, zarządzanie magazynem, generowanie statystyk oraz obsługę różnych poziomów dostępu użytkowników.
-
----
-
-## 🔑 Funkcje
-
-### 👥 Zarządzanie Użytkownikami
-
-- System logowania z różnymi poziomami dostępu (użytkownik, administrator)
-- Bezpieczne przechowywanie haseł z wykorzystaniem SHA-256
-- Sesje użytkowników z zapisem preferencji
-
-### 💰 Zarządzanie Sprzedażą
-
-- Dodawanie nowych transakcji sprzedaży
-- Edycja i usuwanie istniejących wpisów sprzedaży
-- Filtrowanie sprzedaży według daty
-- Podgląd własnej sprzedaży dla zalogowanego użytkownika
-- Podgląd całkowitej sprzedaży dla stoiska
-
-### 🏷️ Zarządzanie Magazynem
-
-- Śledzenie stanu magazynowego dla różnych gatunków i wielkości drzewek
-- Automatyczna aktualizacja stanu magazynowego przy sprzedaży
-- Możliwość ręcznego zwiększania/zmniejszania ilości w magazynie
-
-### 🛠️ Panel Administracyjny
-
-- Dostęp do statystyk sprzedaży
-- Zarządzanie zwrotami
-- Pełny dostęp do magazynu
+**Trees** is a mobile application built with .NET MAUI, designed to manage the sale of trees at market stands. It allows tracking of sales, inventory management, statistics generation, and supports multiple user roles with different access levels.
 
 ---
 
-## 🧱 Architektura Aplikacji
+## 🔑 Features
 
-### 🗂️ Model Danych
+### 👥 User Management
 
-- **Gatunek** – reprezentuje gatunki drzewek (np. Świerk Pospolity, Jodła)
-- **Wielkosc** – określa dostępne rozmiary drzewek
-- **Stoisko** – reprezentuje punkty sprzedaży
-- **Uzytkownicy** – przechowuje dane użytkowników i ich role
-- **Sprzedaz** – zawiera informacje o transakcjach sprzedaży
-- **Magazyn** – śledzi stan magazynowy dla każdego gatunku i wielkości
+- Login system with role-based access (user, administrator)
+- Secure password storage using SHA-256
+- User sessions with preference persistence
 
-### 🧩 Usługi
+### 💰 Sales Management
 
-- **DatabaseService** – centralna usługa do komunikacji z bazą danych SQL Server
-  - Implementuje wzorzec repozytorium dla wszystkich operacji CRUD
+- Add new sales transactions
+- Edit and delete existing sales records
+- Filter sales by date
+- View personal sales (per logged-in user)
+- View total sales per stand
 
-### 🖼️ Widoki
+### 🏷️ Inventory Management
 
-- `LoginPage` – ekran logowania
-- `MainPage` – główny ekran aplikacji
-- `AdminView` – panel administracyjny
-- `DodajSprzedazPage` – dodawanie nowej sprzedaży
-- `WyborStoiskaPage` – wybór stoiska
-- `WyborWielkosciPage` – wybór wielkości drzewka
-- `ZobaczSprzedazPage` – przegląd sprzedaży
-- `MojaSprzedazPage` – przegląd własnej sprzedaży
-- `WarehousePage` – zarządzanie magazynem
+- Track stock levels for different tree types and sizes
+- Automatic inventory updates after sales
+- Manually increase/decrease inventory levels
 
----
+### 🛠️ Admin Panel
 
-## ⚙️ Technologie
-
-- [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) – framework do aplikacji wieloplatformowych
-- **C#** – język programowania
-- **SQL Server** – relacyjna baza danych
-- **Dapper** – mikro-ORM do mapowania obiektowo-relacyjnego
-- **Microsoft.Extensions.DependencyInjection** – do wstrzykiwania zależności
+- Access to overall sales statistics
+- Manage product returns
+- Full access to inventory across stands
 
 ---
 
-## 🚀 Instalacja
+## 🧱 Application Architecture
 
-1. **Sklonuj repozytorium**
+### 🗂️ Data Models
+
+- **Gatunek (Species)** – represents tree types (e.g., Spruce, Fir)
+- **Wielkosc (Size)** – available tree sizes
+- **Stoisko (Stand)** – represents a sales location
+- **Uzytkownicy (Users)** – user data and roles
+- **Sprzedaz (Sales)** – sales transaction records
+- **Magazyn (Inventory)** – inventory tracking by species and size
+
+### 🧩 Services
+
+- **DatabaseService** – central service for communicating with SQL Server
+  - Implements repository pattern for all CRUD operations
+
+### 🖼️ Views
+
+- `LoginPage` – login screen
+- `MainPage` – main dashboard
+- `AdminView` – administrator panel
+- `DodajSprzedazPage` – add new sales entry
+- `WyborStoiskaPage` – select sales stand
+- `WyborWielkosciPage` – select tree size
+- `ZobaczSprzedazPage` – view all sales
+- `MojaSprzedazPage` – view personal sales
+- `WarehousePage` – inventory management
+
+---
+
+## ⚙️ Technologies Used
+
+- [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) – cross-platform application framework
+- **C#** – programming language
+- **SQL Server** – relational database
+- **Dapper** – lightweight ORM for database access
+- **Microsoft.Extensions.DependencyInjection** – dependency injection support
+
+---
+
+## 🚀 Installation
+
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/twoj-login/trees.git
+   git clone https://github.com/your-username/trees.git
    ```
 
-2. **Otwórz projekt w Visual Studio 2022 lub nowszym**
+2. **Open the solution** in Visual Studio 2022 or newer.
 
-3. **Skonfiguruj połączenie z bazą danych** w pliku `DatabaseService.cs`:
-
+3. **Configure the database connection** in `DatabaseService.cs`:
    ```csharp
    string _connectionString = "";
    ```
+   ⚠️ Update the connection string parameters according to your environment.
 
-   🔧 Dostosuj parametry do własnego środowiska.
-
-4. **Uruchom aplikację** na wybranej platformie (Android, iOS, Windows)
-
----
-
-## 🔄 Przepływ Pracy
-
-1. Użytkownik loguje się do aplikacji
-2. Wybiera stoisko, na którym pracuje
-3. Dodaje nową sprzedaż (gatunek, wielkość, cena)
-4. Może przeglądać swoją sprzedaż lub całkowitą sprzedaż stoiska
-5. Administrator uzyskuje dostęp do pełnych funkcji zarządzania
+4. **Run the application** on your target platform (Android, iOS, or Windows).
 
 ---
 
-## 🔐 Bezpieczeństwo
+## 🔄 Workflow
 
-- Hasła hashowane z użyciem SHA-256
-- Lokalne przechowywanie sesji użytkowników
-- Role użytkowników kontrolują dostęp do funkcji
+1. The user logs in to the app.
+2. Selects the stand they are assigned to.
+3. Adds new sales by selecting species, size, and price.
+4. Views their personal sales or total sales for the stand.
+5. Admins get access to extended management features.
 
 ---
 
-## 📌 Status
+## 🔐 Security
 
-Projekt aktywnie rozwijany.  
-Możliwe przyszłe rozszerzenia:
-- Wersja offline
-- Eksport danych do CSV
-- Powiadomienia o niskim stanie magazynowym
+- Passwords are hashed using SHA-256.
+- User sessions are stored locally.
+- Role-based access control ensures proper permissions.
+
+---
+
+## 📌 Project Status
+
+Actively developed.  
+Planned future features:
+
+- Offline mode
+- Export sales data to CSV
+- Low stock notifications
